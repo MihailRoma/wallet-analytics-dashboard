@@ -4,8 +4,8 @@ import { useState, type ReactNode } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Hyperliquid Wallet 0x64b7…9da9 | Hyperstats" },
-      { name: "description", content: "Live performance, positions and PnL for Hyperliquid wallet 0x64b766b07362405a9cc19c2226490f3015929da9." },
+      { title: "Hyperliquid Wallet 0x8f3a…f04b | Hyperstats" },
+      { name: "description", content: "Live performance, positions and PnL for Hyperliquid wallet 0x8f3a…f04b." },
       { property: "og:title", content: "Hyperliquid Wallet | Hyperstats" },
       { property: "og:description", content: "Live performance, positions and PnL for this Hyperliquid wallet." },
       { property: "og:type", content: "website" },
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
   component: WalletPage,
 });
 
-const ADDR = "0x64b766b07362405a9cc19c2226490f3015929da9";
+const ADDR = "0x8f3a21c94be7d06512f0a9c3e47b18d5c2e6f04b";
 
 /* ---------- tiny icons ---------- */
 const I = {
@@ -351,7 +351,7 @@ function Main() {
         <div>
           <h1 className="text-[16px] font-medium tracking-[-0.01em]">Hyperliquid Wallet</h1>
           <div className="mt-1 flex items-center gap-2">
-            <a href={`https://app.hyperliquid.xyz/explorer/address/${ADDR}`} target="_blank" rel="noreferrer" className="clk text-[11px] text-muted-foreground hover:text-foreground hover:underline">{ADDR}</a>
+            <a href={`https://app.hyperliquid.xyz/explorer/address/${ADDR}`} target="_blank" rel="noreferrer" className="clk text-[11px] text-muted-foreground hover:text-foreground hover:underline">{`${ADDR.slice(0, 6)}…${ADDR.slice(-4)}`}</a>
             <Btn>{I.copy}Copy</Btn><Btn>{I.ext}Open</Btn><Btn>{I.star}Save</Btn>
           </div>
         </div>

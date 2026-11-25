@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,10 +33,10 @@ const I = {
 /* ---------- top nav ---------- */
 function Logo() {
   return (
-    <div className="flex items-center gap-2">
+    <a href="#" className="clk flex items-center gap-2">
       <svg width="14" height="16" viewBox="0 0 14 16" fill="currentColor"><rect x="0" y="4" width="3" height="12" rx="1"/><rect x="5.5" y="0" width="3" height="16" rx="1"/><rect x="11" y="6" width="3" height="6" rx="1"/></svg>
       <span className="text-[17px] font-medium tracking-[-0.01em]">Hyperstats</span>
-    </div>
+    </a>
   );
 }
 
@@ -47,17 +47,17 @@ function TopNav() {
       <Logo />
       <nav className="ml-[38px] flex items-center gap-1">
         {items.map((t) => (
-          <a key={t} className={`rounded-full px-[9px] py-[6px] text-[10.5px] ${t === "Favourites" ? "bg-brand text-foreground" : "text-foreground/90"}`}>{t}</a>
+          <a key={t} href="#" className={`clk rounded-full px-[9px] py-[6px] text-[10.5px] ${t === "Favourites" ? "bg-brand text-foreground" : "text-foreground/90 hover:bg-chip-strong"}`}>{t}</a>
         ))}
       </nav>
       <div className="ml-auto flex items-center gap-2">
-        <div className="flex h-[25px] w-[175px] items-center gap-2 rounded-full border border-line bg-chip px-3 text-[9px] text-muted-foreground">
+        <div className="clk flex h-[25px] w-[175px] items-center hover:border-foreground/20 gap-2 rounded-full border border-line bg-chip px-3 text-[9px] text-muted-foreground">
           {I.search}<span className="flex-1 truncate">Search wallets, tokens, ranks...</span>
           <span className="rounded border border-line px-1 text-[8px]">/</span>
         </div>
-        <span className="grid h-[25px] w-[25px] place-items-center rounded-full border border-line bg-chip">{I.x}</span>
-        <span className="flex h-[25px] items-center gap-1.5 rounded-full border border-line bg-chip px-3 text-[9px] font-semibold">{I.send}Bots</span>
-        <span className="flex h-[25px] items-center gap-1.5 rounded-full border border-brand/60 bg-brand/25 px-3 text-[9px]">{I.send}<b className="font-semibold">Copy</b> on Telegram <span className="ml-0.5">→</span></span>
+        <span className="clk grid h-[25px] w-[25px] place-items-center rounded-full border border-line bg-chip hover:bg-chip-strong">{I.x}</span>
+        <span className="clk flex h-[25px] items-center gap-1.5 rounded-full border border-line bg-chip px-3 text-[9px] font-semibold hover:bg-chip-strong">{I.send}Bots</span>
+        <span className="clk flex h-[25px] items-center gap-1.5 rounded-full border border-brand/60 bg-brand/25 px-3 text-[9px] hover:bg-brand/40">{I.send}<b className="font-semibold">Copy</b> on Telegram <span className="ml-0.5">→</span></span>
       </div>
     </header>
   );
@@ -76,8 +76,7 @@ const ticks: Tick[] = [
   ["SOL", "Short", "0x7a26…4f8e", "$88.2K", "5m"],
 ];
 function Coin({ s, size = 14 }: { s: string; size?: number }) {
-  const cls: Record<string, string> = { BTC: "bg-[#f7931a]", ETH: "bg-[#627eea]", HYPE: "bg-[#0d2a26] text-gain", SOL: "bg-[#14f195] text-light-foreground" };
-  return <span style={{ width: size, height: size, fontSize: size * 0.55 }} className={`grid shrink-0 place-items-center rounded-full font-bold text-foreground ${cls[s] ?? "bg-chip-strong"}`}>{s === "BTC" ? "₿" : s === "HYPE" ? "∞" : s[0]}</span>;
+  return <img src={`https://app.hyperliquid.xyz/coins/${s}.svg`} alt={`${s} logo`} width={size} height={size} loading="lazy" style={{ width: size, height: size }} className="shrink-0 rounded-full bg-chip-strong" />;
 }
 function Ticker() {
   const row = [...ticks, ...ticks];
@@ -85,14 +84,14 @@ function Ticker() {
     <div className="overflow-hidden border-y border-line-soft py-[7px]">
       <div className="flex w-max animate-ticker gap-[22px]">
         {row.map((t, i) => (
-          <div key={i} className="flex items-center gap-[7px] text-[9px] whitespace-nowrap">
+          <a href="#" key={i} className="clk flex items-center gap-[7px] text-[9px] whitespace-nowrap hover:opacity-80">
             <Coin s={t[0]} />
             <span className="text-[10px] font-semibold">{t[0]}</span>
             <span className={`rounded px-1.5 py-[1px] text-[7.5px] ${t[1] === "Long" ? "bg-gain/15 text-gain" : t[1] === "Short" ? "bg-loss/15 text-loss" : "bg-chip-strong text-muted-foreground"}`}>{t[1]}</span>
-            <span className="text-[8.5px] text-muted-foreground">{t[2]}</span>
+            <span className="text-[8.5px] text-muted-foreground underline decoration-dotted underline-offset-2">{t[2]}</span>
             <span className={`font-semibold ${t[3].startsWith("−") ? "text-loss" : t[3].startsWith("+") ? "text-gain" : ""}`}>{t[3]}</span>
             <span className="text-dim">{t[4]}</span>
-          </div>
+          </a>
         ))}
       </div>
     </div>
@@ -220,18 +219,20 @@ function PnlChart() {
 
 /* ---------- main ---------- */
 const Btn = ({ children }: { children: ReactNode }) => (
-  <span className="flex h-[21px] items-center gap-1.5 rounded-full border border-line bg-chip px-2.5 text-[8.5px]">{children}</span>
+  <span className="clk flex h-[21px] items-center gap-1.5 rounded-full border border-line bg-chip px-2.5 text-[8.5px] hover:bg-chip-strong">{children}</span>
 );
 const Stat = ({ l, v, c = "" }: { l: string; v: string; c?: string }) => (
   <span className="flex h-[22px] items-center gap-1.5 rounded-full border border-line bg-chip px-2.5 text-[8.5px]"><span className="text-muted-foreground">{l}</span><b className={`font-semibold ${c}`}>{v}</b></span>
 );
-function Seg({ items, active, badges }: { items: string[]; active: string; badges?: Record<string, string> }) {
+function Seg({ items, active, badges, onPick }: { items: string[]; active: string; badges?: Record<string, string>; onPick?: (t: string) => void }) {
+  const [local, setLocal] = useState(active);
+  const cur = onPick ? active : local;
   return (
     <div className="flex items-center rounded-full border border-line bg-chip p-[3px]">
       {items.map((t) => (
-        <span key={t} className={`flex items-center gap-1.5 rounded-full px-[11px] py-[5px] text-[9.5px] ${t === active ? "bg-light font-medium text-light-foreground" : "text-muted-foreground"}`}>
-          {t}{badges?.[t] && <span className={`rounded-full px-1 text-[7px] ${t === active ? "bg-light-foreground/10" : "bg-chip-strong"}`}>{badges[t]}</span>}
-        </span>
+        <button type="button" key={t} onClick={() => (onPick ? onPick(t) : setLocal(t))} className={`clk flex items-center gap-1.5 rounded-full px-[11px] py-[5px] text-[9.5px] ${t === cur ? "bg-light font-medium text-light-foreground" : "text-muted-foreground hover:text-foreground"}`}>
+          {t}{badges?.[t] && <span className={`rounded-full px-1 text-[7px] ${t === cur ? "bg-light-foreground/10" : "bg-chip-strong"}`}>{badges[t]}</span>}
+        </button>
       ))}
     </div>
   );
@@ -256,15 +257,15 @@ function PositionsTable() {
       <thead>
         <tr className="text-[8.5px] text-foreground/90">
           {heads.map((h, i) => (
-            <th key={h} className={`pb-3 font-normal ${i < 2 ? "text-left" : "text-right"} ${i === 0 ? "pl-2.5" : ""}`}>{h}{h !== "Side" && <span className="ml-0.5 text-dim">{h === "P&L" ? "↓" : "⇅"}</span>}</th>
+            <th key={h} className={`clk pb-3 font-normal hover:text-foreground ${i < 2 ? "text-left" : "text-right"} ${i === 0 ? "pl-2.5" : ""}`}>{h}{h !== "Side" && <span className="ml-0.5 text-dim">{h === "P&L" ? "↓" : "⇅"}</span>}</th>
           ))}
           <th />
         </tr>
       </thead>
       <tbody>
         {positions.map((p) => (
-          <tr key={p[0]} className="border-t border-line-soft">
-            <td className="py-[11px] pl-2.5"><div className="flex items-center gap-2.5"><Coin s={p[0]} size={11} /><div><div className="font-medium">{p[0]}</div><div className="text-[7.5px] text-muted-foreground">{p[1]}</div></div></div></td>
+          <tr key={p[0]} className="clk border-t border-line-soft hover:bg-chip">
+            <td className="py-[11px] pl-2.5"><div className="flex items-center gap-2.5"><Coin s={p[0]} size={11} /><div><a href="#" className="font-medium hover:underline">{p[0]}</a><div className="text-[7.5px] text-muted-foreground">{p[1]}</div></div></div></td>
             <td><span className={`flex items-center gap-2 ${p[2] === "Long" ? "text-gain" : "text-loss"}`}><span className={`grid h-[15px] w-[15px] place-items-center rounded text-[8px] ${p[2] === "Long" ? "bg-gain/15" : "bg-loss/15"}`}>{p[2] === "Long" ? "↑" : "↓"}</span><span className="text-[8px]">{p[2]}</span></span></td>
             <td className="text-right text-muted-foreground">{p[3]}</td>
             <td className="text-right">{p[4]}</td>
@@ -281,6 +282,68 @@ function PositionsTable() {
   );
 }
 
+type Tx = [string, string, string, string, string, string, string, string];
+const txs: Tx[] = [
+  ["22:38:12", "Open Long", "HYPE", "1,240.5", "$42,180.21", "$12.65", "0x9f3c2a71e4b05d8a6c1f7e2b9d0a34c5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1", "Filled"],
+  ["22:36:47", "Swap", "USDC → HYPE", "25,000", "$25,000.00", "$8.75", "0x1a7be0c45f29d3e8b61c0a2f4e7d9b3c5a8f1e0d2c4b6a8f0e2d4c6b8a0f2e4d", "Filled"],
+  ["22:31:05", "Limit Order", "BTC", "0.2500", "$21,776.25", "—", "0x4c8d1e2f3a5b7c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d", "Cancelled"],
+  ["22:28:54", "Close Short", "AAVE", "142.30", "$13,640.31", "$4.09", "0x7e2f9a0b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5b7c9d1e3f5a7b9c1d3e5f", "Filled"],
+  ["22:20:19", "Increase Short", "ADA", "84,000", "$12,364.80", "$3.71", "0xb5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6", "Filled"],
+  ["22:14:02", "Swap", "HYPE → USDC", "500.00", "$16,991.50", "$5.94", "0x2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e", "Filled"],
+  ["22:09:41", "Reduce Long", "BIO", "1,820,000", "$27,594.84", "$8.28", "0xc0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1", "Filled"],
+  ["21:58:30", "Stop Order", "ARB", "48,500", "$5,438.73", "—", "0x8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b", "Open"],
+  ["21:47:16", "Open Short", "DOGE", "120,000", "$18,289.20", "$5.49", "0x3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a", "Filled"],
+  ["21:33:08", "Deposit", "USDC", "250,000", "$250,000.00", "—", "0xe4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5", "Confirmed"],
+];
+const short = (h: string) => `${h.slice(0, 8)}…${h.slice(-6)}`;
+function TransactionsTable() {
+  const heads = ["Time", "Type", "Asset", "Size", "Value", "Fee", "Status", "Tx ID"];
+  return (
+    <table className="mt-5 w-full text-[9px]">
+      <thead><tr className="text-[8.5px] text-foreground/90">{heads.map((h, i) => <th key={h} className={`clk pb-3 font-normal hover:text-foreground ${i < 3 ? "text-left" : "text-right"} ${i === 0 ? "pl-2.5" : ""}`}>{h}</th>)}</tr></thead>
+      <tbody>
+        {txs.map((t) => {
+          const coin = t[2].includes("→") ? t[2].split(" → ")[1]! : t[2];
+          const tone = t[1].includes("Long") || t[1] === "Deposit" ? "text-gain" : t[1].includes("Short") ? "text-loss" : t[1] === "Swap" ? "text-brand" : "text-gold";
+          return (
+            <tr key={t[6]} className="clk border-t border-line-soft hover:bg-chip">
+              <td className="py-[11px] pl-2.5 text-muted-foreground">{t[0]}<div className="text-[7px] text-dim">Nov 25</div></td>
+              <td><span className={`rounded px-1.5 py-[2px] text-[8px] ${tone} bg-chip-strong`}>{t[1]}</span></td>
+              <td><div className="flex items-center gap-2"><Coin s={coin} size={12} /><a href="#" className="font-medium hover:underline">{t[2]}</a></div></td>
+              <td className="text-right">{t[3]}</td>
+              <td className="text-right">{t[4]}</td>
+              <td className="text-right text-muted-foreground">{t[5]}</td>
+              <td className={`text-right ${t[7] === "Cancelled" ? "text-loss" : t[7] === "Open" ? "text-gold" : "text-gain"}`}>{t[7]}</td>
+              <td className="text-right">
+                <a href={`https://app.hyperliquid.xyz/explorer/tx/${t[6]}`} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="clk inline-flex items-center gap-1 font-mono text-[8.5px] text-brand underline decoration-brand/40 underline-offset-2 hover:decoration-brand">{short(t[6])}{I.ext}</a>
+              </td>
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+}
+function SpotTable() {
+  const rows = [["USDC", "33,512,840.12", "$33.51M", "$1.0000"], ["HYPE", "7,612.40", "$258.8K", "$34.00"]];
+  return (
+    <table className="mt-5 w-full text-[9px]">
+      <thead><tr className="text-[8.5px] text-foreground/90">{["Asset", "Balance", "Value", "Price"].map((h, i) => <th key={h} className={`pb-3 font-normal ${i ? "text-right" : "pl-2.5 text-left"}`}>{h}</th>)}</tr></thead>
+      <tbody>{rows.map((r) => <tr key={r[0]} className="clk border-t border-line-soft hover:bg-chip"><td className="py-[11px] pl-2.5"><div className="flex items-center gap-2.5"><Coin s={r[0]!} size={12} /><a href="#" className="font-medium hover:underline">{r[0]}</a></div></td><td className="text-right">{r[1]}</td><td className="text-right">{r[2]}</td><td className="text-right text-muted-foreground">{r[3]}</td></tr>)}</tbody>
+    </table>
+  );
+}
+function BottomTabs() {
+  const [tab, setTab] = useState("Positions");
+  return (
+    <>
+      <div className="inline-flex"><Seg items={["Positions", "Spot", "Transactions", "Orders", "History", "Entries"]} active={tab} onPick={setTab} badges={{ Positions: "48", Spot: "2", Transactions: "3,046", Orders: "0" }} /></div>
+      <div className="mt-[12px] flex gap-[7px]"><Stat l="Total Value" v="$100.98M" /><Stat l="Total Margin" v="$8.16M" /><Stat l="Open P&L" v="−$9.86M" c="text-loss" /></div>
+      {tab === "Transactions" ? <TransactionsTable /> : tab === "Spot" ? <SpotTable /> : tab === "Positions" ? <PositionsTable /> : <div className="py-16 text-center text-[9px] text-muted-foreground">No {tab.toLowerCase()} to show</div>}
+    </>
+  );
+}
+
 function Main() {
   return (
     <main className="min-w-0 px-4 py-[16px]">
@@ -288,13 +351,13 @@ function Main() {
         <div>
           <h1 className="text-[16px] font-medium tracking-[-0.01em]">Hyperliquid Wallet</h1>
           <div className="mt-1 flex items-center gap-2">
-            <span className="text-[11px] text-muted-foreground">{ADDR}</span>
+            <a href={`https://app.hyperliquid.xyz/explorer/address/${ADDR}`} target="_blank" rel="noreferrer" className="clk text-[11px] text-muted-foreground hover:text-foreground hover:underline">{ADDR}</a>
             <Btn>{I.copy}Copy</Btn><Btn>{I.ext}Open</Btn><Btn>{I.star}Save</Btn>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="grid h-[25px] w-[25px] place-items-center rounded-full border border-line bg-chip">{I.refresh}</span>
-          <span className="flex h-[25px] items-center gap-2 rounded-full border border-line bg-chip px-3 text-[9px]">Hide favourites {I.chev}</span>
+          <span className="clk grid h-[25px] w-[25px] place-items-center rounded-full border border-line bg-chip hover:bg-chip-strong">{I.refresh}</span>
+          <span className="clk flex h-[25px] items-center gap-2 rounded-full border border-line bg-chip px-3 text-[9px] hover:bg-chip-strong">Hide favourites {I.chev}</span>
         </div>
       </div>
       <div className="mt-2 flex items-center gap-3 text-[8.5px]">
@@ -332,9 +395,7 @@ function Main() {
       </div>
       <div className="mt-2"><PnlChart /></div>
       <div className="mt-[68px]">
-        <div className="inline-flex"><Seg items={["Positions", "Spot", "Orders", "History", "Entries"]} active="Positions" badges={{ Positions: "48", Spot: "2", Orders: "0" }} /></div>
-        <div className="mt-[12px] flex gap-[7px]"><Stat l="Total Value" v="$100.98M" /><Stat l="Total Margin" v="$8.16M" /><Stat l="Open P&L" v="−$9.86M" c="text-loss" /></div>
-        <PositionsTable />
+        <BottomTabs />
       </div>
     </main>
   );
@@ -347,10 +408,10 @@ function RightSidebar() {
       <div className="border-b border-line-soft px-[14px] py-[16px]">
         <div className="text-[11.5px] font-semibold">Telegram alerts</div>
         <p className="mt-2 text-[8px] leading-[1.75] text-muted-foreground">Get pinged on every position open, close, and liquidation from your favourites — straight to Telegram.</p>
-        <button className="mt-3 flex h-[29px] w-full items-center justify-center gap-2 rounded-full bg-light text-[9px] font-medium text-light-foreground">{I.send}Connect Telegram</button>
+        <button className="clk mt-3 flex h-[29px] w-full hover:opacity-90 items-center justify-center gap-2 rounded-full bg-light text-[9px] font-medium text-light-foreground">{I.send}Connect Telegram</button>
       </div>
       <div className="px-[14px] py-[18px]">
-        <div className="flex items-center justify-between"><span className="text-[11px] font-semibold">Favourites</span><span className="rounded-full border border-line bg-chip px-2.5 py-1 text-[8.5px]">+ Add</span></div>
+        <div className="flex items-center justify-between"><span className="text-[11px] font-semibold">Favourites</span><span className="clk rounded-full border border-line bg-chip px-2.5 py-1 text-[8.5px] hover:bg-chip-strong">+ Add</span></div>
         <div className="mt-3 text-[8px] text-muted-foreground"><b className="text-foreground">0</b> wallets tracked</div>
         <div className="mt-3 flex h-[24px] items-center gap-2 rounded-md border border-line bg-chip px-2.5 text-[8.5px] text-muted-foreground">{I.search}Search wallet...</div>
         <div className="mt-3 flex items-center gap-3 text-[7.5px] text-muted-foreground">
@@ -371,7 +432,7 @@ function RightSidebar() {
 
 function WalletPage() {
   return (
-    <div className="min-h-screen min-w-[1600px] bg-background">
+    <div className="min-h-screen min-w-[1440px] bg-background" style={{ zoom: 1.15 }}>
       <TopNav />
       <Ticker />
       <div className="grid grid-cols-[212px_1fr_214px]">
